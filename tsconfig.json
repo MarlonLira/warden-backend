@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "./src",
+    "sourceMap": true,
+    "module": "commonjs",
+    "target": "es2017",
+    "resolveJsonModule": true
+  }
+}
