@@ -10,9 +10,6 @@ class Product extends sequelize_1.Model {
         super();
         if (json != undefined) {
             let _currentDate = new InnerDate_1.InnerDate().Now();
-            console.log(json.date);
-            console.log(_currentDate.FullDate);
-            console.log(json);
             this.id = Helpers_1.Attributes.ReturnIfValid(json.id);
             this.status = Helpers_1.Attributes.ReturnIfValid(json.status);
             this.name = Helpers_1.Attributes.ReturnIfValid(json.name);
@@ -35,12 +32,11 @@ Product.init({
         type: new sequelize_1.DataTypes.INTEGER
     },
     name: {
-        type: new sequelize_1.DataTypes.STRING(128),
+        type: new sequelize_1.DataTypes.STRING(30),
         allowNull: false
     },
     code: {
         type: new sequelize_1.DataTypes.STRING(12),
-        allowNull: false
     },
     amount: {
         type: new sequelize_1.DataTypes.INTEGER
@@ -52,14 +48,14 @@ Product.init({
         type: new sequelize_1.DataTypes.DATEONLY
     },
     obs: {
-        type: new sequelize_1.DataTypes.STRING(255)
+        type: new sequelize_1.DataTypes.STRING(20)
     }
 }, {
     sequelize: _instance,
     tableName: 'Product',
     scopes: {
         public: {
-            attributes: ['name', 'amount', 'date', 'validity']
+            attributes: ['name', 'code', 'amount', 'date', 'validity', 'obs']
         }
     }
 });

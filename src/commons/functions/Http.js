@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Http_1 = require("../enums/Http");
 //http://weblink.com.br/blog/o-que-e-http-codigos-erros-http
-function GetHttpMessage(value, msg = null, result = null) {
+function GetHttpMessage(value, entitie = null, result = null) {
     var result;
     switch (value) {
         case Http_1.HttpCode.Continue: {
@@ -16,7 +16,7 @@ function GetHttpMessage(value, msg = null, result = null) {
         case Http_1.HttpCode.Ok: {
             result = {
                 code: 200,
-                message: (msg !== null && msg !== void 0 ? msg : 'Ok'),
+                message: `${entitie.name} Ok`,
                 result: result
             };
             break;
@@ -24,19 +24,19 @@ function GetHttpMessage(value, msg = null, result = null) {
         case Http_1.HttpCode.Created: {
             result = {
                 code: 201,
-                message: (msg !== null && msg !== void 0 ? msg : 'Criado/Gerado'),
+                message: `${entitie.name} Criado/Gerado`,
                 result: result
             };
             break;
         }
         case Http_1.HttpCode.Accepted: {
-            result = "Aceito";
+            result = `${entitie.name} Aceito`;
             break;
         }
         case Http_1.HttpCode.Found: {
             result = {
                 code: 302,
-                message: (msg !== null && msg !== void 0 ? msg : 'Encontrado'),
+                message: `${entitie.name} Encontrato`,
                 result: result
             };
             break;
@@ -44,7 +44,7 @@ function GetHttpMessage(value, msg = null, result = null) {
         case Http_1.HttpCode.Bad_Request: {
             result = {
                 code: 400,
-                message: (msg !== null && msg !== void 0 ? msg : 'Solicitação Inválida'),
+                message: `${entitie.name} Solicitação Inválida`,
                 result: result
             };
             break;
@@ -58,7 +58,7 @@ function GetHttpMessage(value, msg = null, result = null) {
         case Http_1.HttpCode.Not_Found: {
             result = {
                 code: 404,
-                message: (msg !== null && msg !== void 0 ? msg : 'Not Found'),
+                message: `${entitie.name} Not Found`,
                 result: result
             };
             break;
@@ -69,7 +69,7 @@ function GetHttpMessage(value, msg = null, result = null) {
         case Http_1.HttpCode.Internal_Server_Error: {
             result = {
                 code: 500,
-                message: (msg !== null && msg !== void 0 ? msg : 'Internal Server Error'),
+                message: `${entitie.name} Internal Server Error`,
                 result: result
             };
             break;
@@ -86,8 +86,8 @@ function GetHttpMessage(value, msg = null, result = null) {
         default: {
             result = {
                 code: 500,
-                message: (msg !== null && msg !== void 0 ? msg : 'Internal Server Error'),
-                result: "Codigo não encontrado!"
+                message: `${entitie.name} Internal Server Error`,
+                result: result
             };
         }
     }

@@ -5,6 +5,7 @@ const sequelize_2 = require("sequelize");
 const BillingCycle_1 = require("../models/BillingCycle");
 const Http_1 = require("../commons/enums/Http");
 const Http_2 = require("../commons/functions/Http");
+const Helpers_1 = require("../commons/Helpers");
 const InnerDate_1 = require("../models/InnerDate");
 class BillingCycleController extends BillingCycle_1.BillingCycle {
     Save(response) {
@@ -14,7 +15,7 @@ class BillingCycleController extends BillingCycle_1.BillingCycle {
                 debit: this.debit,
                 date: this.date
             }).then(result => {
-                response.status(Http_1.HttpCode.Ok).send(Http_2.GetHttpMessage(Http_1.HttpCode.Ok, null, result));
+                response.status(Http_1.HttpCode.Ok).send(Http_2.GetHttpMessage(Http_1.HttpCode.Ok, `${BillingCycle_1.BillingCycle.name} cadastrado`, result));
                 resolve(result);
             }).catch(error => {
                 console.error(error.message);
@@ -59,10 +60,53 @@ class BillingCycleController extends BillingCycle_1.BillingCycle {
         });
     }
     Update(response) {
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            let attributes = {};
+            BillingCycle_1.BillingCycle.findOne({
+                where: {
+                    id: this.id
+                }
+            }).then(result => {
+                attributes.credit = Helpers_1.Attributes.ReturnIfValid(this.credit, result.credit);
+                attributes.debit = Helpers_1.Attributes.ReturnIfValid(this.debit, result.debit);
+                attributes.date = Helpers_1.Attributes.ReturnIfValid(this.date, result.date);
+                BillingCycle_1.BillingCycle.update(attributes, {
+                    where: {
+                        id: this.id
+                    }
+                })
+                    .then(result => {
+                    response.status(Http_1.HttpCode.Ok).send(Http_2.GetHttpMessage(Http_1.HttpCode.Ok, `${BillingCycle_1.BillingCycle.name} atualizado`, result));
+                    resolve(result);
+                })
+                    .catch(error => {
+                    resolve(response.status(Http_1.HttpCode.Internal_Server_Error).send(Http_2.GetHttpMessage(Http_1.HttpCode.Internal_Server_Error, null, error)));
+                });
+            })
+                .catch(error => {
+                resolve(response.status(Http_1.HttpCode.Not_Found).send(Http_2.GetHttpMessage(Http_1.HttpCode.Not_Found, `${BillingCycle_1.BillingCycle.name} não encontrado`, error)));
+            });
+        });
     }
     Delete(response) {
-        throw new Error("Method not implemented.");
+        return new Promise((resolve, reject) => {
+            BillingCycle_1.BillingCycle.destroy({
+                where: {
+                    id: this.id
+                }
+            }).then(result => {
+                if (result == 1) {
+                    response.status(Http_1.HttpCode.Ok).send(Http_2.GetHttpMessage(Http_1.HttpCode.Ok, `${BillingCycle_1.BillingCycle.name} apagado`, result));
+                }
+                else {
+                    resolve(response.status(Http_1.HttpCode.Not_Found).send(Http_2.GetHttpMessage(Http_1.HttpCode.Not_Found, `${BillingCycle_1.BillingCycle.name} não encontrado`, result)));
+                }
+                resolve(result);
+            })
+                .catch(error => {
+                resolve(response.status(Http_1.HttpCode.Internal_Server_Error).send(Http_2.GetHttpMessage(Http_1.HttpCode.Internal_Server_Error, null, error)));
+            });
+        });
     }
 }
 exports.default = BillingCycleController;

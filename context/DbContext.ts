@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import * as dbConfig from '../commons/configs/DbConfig.json';
 
-var _dbConfig = dbConfig.PostgreSQL;
+var _dbConfig = dbConfig.MySql;
 
 class DbContext {
 
@@ -24,7 +24,7 @@ class DbContext {
       {
         port: this.port,
         host: this.host,
-        dialect: 'postgres',
+        dialect: 'mysql',
         ssl: true
       }
     );

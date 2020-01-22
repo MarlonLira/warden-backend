@@ -16,7 +16,7 @@ export default class BillingCycleController extends BillingCycle implements IEnt
         debit: this.debit,
         date: this.date
       }).then(result => {
-        response.status(HttpCode.Ok).send(GetHttpMessage(HttpCode.Ok, null, result));
+        response.status(HttpCode.Ok).send(GetHttpMessage(HttpCode.Ok, `${BillingCycle.name} cadastrado`, result));
         resolve(result);
       }).catch(error => {
         console.error(error.message);
@@ -63,10 +63,55 @@ export default class BillingCycleController extends BillingCycle implements IEnt
         });
     })
   }
-  Update(response?: any) {
-    throw new Error("Method not implemented.");
-  }
+  
+	Update(response?: any) {
+		return new Promise((resolve, reject) => {
+			let attributes: any = {}
+
+			BillingCycle.findOne({
+				where: {
+					id: this.id
+				}
+			}).then(result => {
+				attributes.credit = Attributes.ReturnIfValid(this.credit, result.credit);
+				attributes.debit = Attributes.ReturnIfValid(this.debit, result.debit);
+				attributes.date = Attributes.ReturnIfValid(this.date, result.date);
+
+				BillingCycle.update(attributes, {
+					where: {
+						id: this.id
+					}
+				})
+					.then(result => {
+						response.status(HttpCode.Ok).send(GetHttpMessage(HttpCode.Ok, `${BillingCycle.name} atualizado`, result));
+						resolve(result);
+					})
+					.catch(error => {
+						resolve(response.status(HttpCode.Internal_Server_Error).send(GetHttpMessage(HttpCode.Internal_Server_Error, null, error)));
+					})
+			})
+				.catch(error => {
+					resolve(response.status(HttpCode.Not_Found).send(GetHttpMessage(HttpCode.Not_Found, `${BillingCycle.name} não encontrado`, error)));
+				})
+		})
+	}
   Delete(response?: any) {
-    throw new Error("Method not implemented.");
-  }
+		return new Promise((resolve, reject) => {
+			BillingCycle.destroy({
+				where: {
+					id: this.id
+				}
+			}).then(result => {
+				if (result == 1) {
+					response.status(HttpCode.Ok).send(GetHttpMessage(HttpCode.Ok, `${BillingCycle.name} apagado`, result));
+				} else {
+					resolve(response.status(HttpCode.Not_Found).send(GetHttpMessage(HttpCode.Not_Found, `${BillingCycle.name} não encontrado`, result)));
+				}
+				resolve(result);
+			})
+				.catch(error => {
+					resolve(response.status(HttpCode.Internal_Server_Error).send(GetHttpMessage(HttpCode.Internal_Server_Error, null, error)));
+				})
+		})
+	}
 }
